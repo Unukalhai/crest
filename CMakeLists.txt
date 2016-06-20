@@ -1,4 +1,8 @@
 cmake_minimum_required(VERSION 2.8.7)
+
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "CMake")
+
 project(crest)
 
 if(NOT ${CMAKE_VERSION} LESS 3.2)
@@ -29,13 +33,18 @@ else()
     endif()
 endif()
 
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
+set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
+
+set(CREST_LIBRARIES crest CACHE INTERNAL "")
+set(CREST_ID ${CMAKE_CURRENT_SOURCE_DIR}/include CACHE INTERNAL "")
+set(CREST_SD ${CMAKE_CURRENT_SOURCE_DIR}/src/)
+
 include_directories(include)
 add_subdirectory(opt)
 
-set(CREST_ID ${CMAKE_CURRENT_SOURCE_DIR}/include/crest/)
-set(CREST_SD ${CMAKE_CURRENT_SOURCE_DIR}/src/)
-set(CREST_SOUCE_LIB ${CREST_SD}/crest.cpp ${CREST_ID}/crest.h)
+set(CREST_SOURCE_LIB ${CREST_SD}/crest.cpp ${CREST_ID}/crest/crest.h)
 
-add_library(crest STATIC ${CREST_SOUCE_LIB})
+add_library(crest STATIC ${CREST_SOURCE_LIB})
 target_link_libraries(crest ${CPR_LIBRARIES})
 include_directories(${CPR_INCLUDE_DIRS} ${JSON_INCLUDE_DIRS})
