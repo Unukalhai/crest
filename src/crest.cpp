@@ -1,14 +1,14 @@
 #include <crest/crest.h>
 
-nlohmann::json crest::getJSON(std::string url) {
+nlohmann::json crest::getJSON(string url) {
     auto response = cpr::Get(cpr::Url{url});
-    if(response.status_code != 200) throw std::runtime_error("CREST error code " + std::to_string(response.status_code)
+    if(response.status_code != 200) throw runtime_error("CREST error code " + to_string(response.status_code)
                                                              + " in " + url);
     return nlohmann::json::parse(response.text);
 }
 
-std::list<crest::insurance> crest::getInsurance(int* ids, int size, std::string type) {
-    std::list<crest::insurance> insurances;
+list<crest::insurance> crest::getInsurance(int* ids, int size, string type) {
+    list<crest::insurance> insurances;
     auto json = crest::getJSON("https://crest-tq.eveonline.com/insuranceprices/");
     for(auto json_item : json["items"]) {
         for(int i=0; i<size; i++) {
@@ -29,9 +29,9 @@ std::list<crest::insurance> crest::getInsurance(int* ids, int size, std::string 
     return insurances;
 }
 
-unsigned int crest::getMarketPrice(int itemID, int regionID, std::string orderType, int stationID) {
-    std::string url = "https://crest-tq.eveonline.com/market/" + std::to_string(regionID) + "/orders/" +
-                      orderType + "/" + "?type=https://crest-tq.eveonline.com/inventory/types/" + std::to_string(itemID) + "/";
+unsigned int crest::getMarketPrice(int itemID, int regionID, string orderType, int stationID) {
+    string url = "https://crest-tq.eveonline.com/market/" + to_string(regionID) + "/orders/" +
+                      orderType + "/" + "?type=https://crest-tq.eveonline.com/inventory/types/" + to_string(itemID) + "/";
     auto json = crest::getJSON(url);
     unsigned int bestPrice = 0;
     for(auto json_item : json["items"]) {
@@ -53,8 +53,8 @@ unsigned int crest::getMarketPrice(int itemID, int regionID, std::string orderTy
     return bestPrice;
 }
 
-std::list<crest::structure> crest::getStructures(int* ids, int size) {
-    std::list<crest::structure> structures;
+list<crest::structure> crest::getStructures(int* ids, int size) {
+    list<crest::structure> structures;
     auto json = crest::getJSON("https://crest-tq.eveonline.com/sovereignty/structures/");
     for(auto json_item : json["items"]) {
         for(int i=0; i<size; i++) {
@@ -71,8 +71,8 @@ std::list<crest::structure> crest::getStructures(int* ids, int size) {
     return structures;
 }
 
-std::string crest::getName(int id) {
-    std::string url = "https://crest-tq.eveonline.com/inventory/types/" + std::to_string(id) + "/";
+string crest::getName(int id) {
+    string url = "https://crest-tq.eveonline.com/inventory/types/" + to_string(id) + "/";
     auto json = crest::getJSON(url);
     return json["name"];
 }

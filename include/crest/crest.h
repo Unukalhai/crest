@@ -7,6 +7,8 @@
 #include <list>
 #include <exception>
 
+using namespace std;
+
 class crest {
 public:
     struct insurance{
@@ -17,13 +19,13 @@ public:
         int id, type_id, system_id, alliance_id;
     };
 
-    std::list<insurance> getInsurance(int* ids, int size, std::string type);
-    unsigned int getMarketPrice(int itemID, int regionID, std::string orderType, int stationID);
+    list<insurance> getInsurance(int* ids, int size, string type);
+    unsigned int getMarketPrice(int itemID, int regionID, string orderType, int stationID);
     // for search in region set stationID=0
-    std::list<structure> getStructures(int* ids, int size);
-    std::string getName(int id);
+    list<structure> getStructures(int* ids, int size);
+    string getName(int id);
 private:
-    nlohmann::json getJSON(std::string url);
+    nlohmann::json getJSON(string url);
 };
 
 #endif //IAPETUS_CREST_H
