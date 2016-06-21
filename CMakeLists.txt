@@ -47,4 +47,4 @@ set(CREST_SOURCE_LIB ${CREST_SD}/crest.cpp ${CREST_ID}/crest/crest.h)
 
 add_library(crest STATIC ${CREST_SOURCE_LIB})
 target_link_libraries(crest ${CPR_LIBRARIES})
-include_directories(${CPR_INCLUDE_DIRS} ${JSON_INCLUDE_DIRS})
+target_include_directories(crest PUBLIC ${CPR_INCLUDE_DIRS} ${JSON_INCLUDE_DIRS})
