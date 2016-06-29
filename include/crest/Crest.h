@@ -9,13 +9,17 @@
 
 using namespace std;
 
-class crest {
+class Crest
+{
 public:
-    struct insurance{
+    struct insurance
+    {
         int id = 0;
         unsigned int cost = 0, payout = 0;
     };
-    struct structure{
+
+    struct structure
+    {
         int id, type_id, system_id, alliance_id;
     };
 
@@ -24,6 +28,7 @@ public:
     // for search in region set stationID=0
     list<structure> getStructures(int* ids, int size);
     string getName(int id);
+
 private:
     nlohmann::json getJSON(string url);
 };

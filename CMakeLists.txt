@@ -43,7 +43,7 @@ set(CREST_SD ${CMAKE_CURRENT_SOURCE_DIR}/src/)
 include_directories(include)
 add_subdirectory(opt)
 
-set(CREST_SOURCE_LIB ${CREST_SD}/crest.cpp ${CREST_ID}/crest/crest.h)
+set(CREST_SOURCE_LIB ${CREST_SD}/Crest.cpp ${CREST_ID}/crest/Crest.h)
 
 add_library(crest STATIC ${CREST_SOURCE_LIB})
 target_link_libraries(crest ${CPR_LIBRARIES})
