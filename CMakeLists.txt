@@ -37,14 +37,7 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
 
 set(CREST_LIBRARIES crest CACHE INTERNAL "")
-set(CREST_ID ${CMAKE_CURRENT_SOURCE_DIR}/include CACHE INTERNAL "")
-set(CREST_SD ${CMAKE_CURRENT_SOURCE_DIR}/src/)
 
-include_directories(include)
-add_subdirectory(opt)
-
-set(CREST_SOURCE_LIB ${CREST_SD}/Crest.cpp ${CREST_ID}/crest/Crest.h)
+set(CREST_SOURCE_LIB src/crest.cpp crest.h)
 
 add_library(crest STATIC ${CREST_SOURCE_LIB})
-target_link_libraries(crest ${CPR_LIBRARIES})
-target_include_directories(crest PUBLIC ${CPR_INCLUDE_DIRS} ${JSON_INCLUDE_DIRS})
