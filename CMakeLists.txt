@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.7)
+cmake_minimum_required(VERSION 3.0.0)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "CMake")
@@ -33,11 +33,32 @@ else()
     endif()
 endif()
 
+find_package(Qt REQUIRED QtCore QtNetwork)
+find_package(GTest REQUIRED)
+set(CMAKE_AUTOMOC TRUE)
+set(CMAKE_AUTOUIC TRUE)
+set(CMAKE_AUTORCC TRUE)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+find_package(PkgConfig REQUIRED)
+
+enable_testing()
+
+file(GLOB SOURCE_LIB src/*.cpp)
+file(GLOB ALL_HEADERS *.h)
+
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
 
-set(CREST_LIBRARIES crest CACHE INTERNAL "")
+add_library(${PROJECT_NAME} STATIC ${ALL_HEADERS} ${SOURCE_LIB})
+target_link_libraries(${PROJECT_NAME} Qt4::QtNetwork)
 
-set(CREST_SOURCE_LIB src/crest.cpp crest.h)
+# install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/etc/config.ini DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/etc)
 
-add_library(crest STATIC ${CREST_SOURCE_LIB})
+include_directories(${GTEST_INCLUDE_DIR})
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
+add_executable(crest_test tst/crest_test.cpp src/crest.cpp)
+target_link_libraries(crest_test ${GTEST_BOTH_LIBRARIES} Qt4::QtNetwork)
+add_test(NAME crest_test COMMAND crest_test)
