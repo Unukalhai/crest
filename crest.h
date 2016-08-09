@@ -7,10 +7,13 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QJsonDocument>
+#include <QJsonValue>
+#include <QJsonArray>
 #include <QJsonObject>
 #include <QEventLoop>
 
 #include <boost/scoped_ptr.hpp>
+#include <boost/foreach.hpp>
 
 #include <list>
 #include <stdexcept>

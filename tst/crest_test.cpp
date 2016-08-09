@@ -33,12 +33,12 @@ TEST_F(CrestTest, getName)
 
 TEST_F(CrestTest, getMarketPrice_4Capital)
 {
-  ASSERT_EQ(0, crest->getMarketPrice(19722, 10000002 , "sell"));
+  ASSERT_EQ(2000000000, crest->getMarketPrice(19722, 10000002 , "sell"));
 }
 
 TEST_F(CrestTest, getMarketPrice_4SubCapital)
 {
-  ASSERT_EQ(0, crest->getMarketPrice(24698, 10000002 , "sell", 60003760));
+  ASSERT_EQ(54999898, crest->getMarketPrice(24698, 10000002 , "sell", 60003760));
 }
 
 /*TEST_F(CrestTest, getInsurance)

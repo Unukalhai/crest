@@ -40,7 +40,6 @@ endif()
 find_package(Qt5 COMPONENTS Core Gui Network Widgets Sql Test REQUIRED)
 find_package(Boost REQUIRED)
 find_package(GTest REQUIRED)
-#find_package(GMock REQUIRED)
 find_package(PkgConfig REQUIRED)
 
 set(CMAKE_AUTOMOC TRUE)
@@ -50,7 +49,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
-include_directories(${GTEST_INCLUDE_DIR})# ${GMOCK_INCLUDE_DIRS})
+include_directories(${GTEST_INCLUDE_DIR})
 
 file(GLOB SOURCE_LIB src/*.cpp)
 file(GLOB ALL_HEADERS *.h)
@@ -61,8 +60,6 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
 add_library(${PROJECT_NAME} STATIC ${ALL_HEADERS} ${SOURCE_LIB})
 target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Network)
 
-# install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/etc/config.ini DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/etc)
-
 add_executable(crest_test tst/crest_test.cpp src/crest.cpp)
-target_link_libraries(crest_test ${GTEST_BOTH_LIBRARIES} Qt5::Core Qt5::Network)#${GMOCK_MAIN_LIBRARY} ${GMOCK_LIBRARY})
+target_link_libraries(crest_test ${GTEST_BOTH_LIBRARIES} Qt5::Core Qt5::Network)
 add_test(NAME crest_test COMMAND crest_test)
