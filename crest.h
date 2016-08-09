@@ -1,13 +1,16 @@
 #ifndef IAPETUS_CREST_H
 #define IAPETUS_CREST_H
 
-#include <QCoreApplication>
-#include <QDebug>
+#include <QString>
+#include <QUrl>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
-#include <QUrl>
-#include <QStringList>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QEventLoop>
+
+#include <boost/scoped_ptr.hpp>
 
 #include <list>
 #include <stdexcept>
@@ -24,23 +27,17 @@ public:
     unsigned int payout = 0;
   };
 
-  struct structure
-  {
-    int id;
-    int type_id;
-    int system_id;
-    int alliance_id;
-  };
-
-  //list<insurance> getInsurance(int* ids, int size, string type);
-  //unsigned int getMarketPrice(int itemID, int regionID, string orderType, int stationID);
-  // for search in region set stationID=0
-  //list<structure> getStructures(int* ids, int size);
-  //string getName(int id);
+  Crest(string url = "https://crest-tq.eveonline.com/");
+  ~Crest();
+  string getName(int id);
+  unsigned int getMarketPrice(int itemID, int regionID, string orderType, int stationID = 0);
+  list<Crest::insurance> getInsurance(int* ids, int size, string type);
 
 private:
-  //nlohmann::json getJSON(string url);
-  QString getJson(QString url);
+  QString getJson(QString param);
+
+  boost::scoped_ptr<QNetworkAccessManager> m_namanager;
+  QString m_url;
 };
 
 #endif //IAPETUS_CREST_H

@@ -5,6 +5,10 @@ set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "CMake")
 
 project(crest)
 
+enable_testing()
+
+set(BUILD_SYSTEM_COMMON_PATH "${PROJECT_BINARY_DIR}/.cmake")
+
 if(NOT ${CMAKE_VERSION} LESS 3.2)
     set(CMAKE_CXX_STANDARD 11)
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -33,16 +37,20 @@ else()
     endif()
 endif()
 
-find_package(Qt REQUIRED QtCore QtNetwork)
+find_package(Qt5 COMPONENTS Core Gui Network Widgets Sql Test REQUIRED)
+find_package(Boost REQUIRED)
 find_package(GTest REQUIRED)
+#find_package(GMock REQUIRED)
+find_package(PkgConfig REQUIRED)
+
 set(CMAKE_AUTOMOC TRUE)
 set(CMAKE_AUTOUIC TRUE)
 set(CMAKE_AUTORCC TRUE)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-find_package(PkgConfig REQUIRED)
-
-enable_testing()
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+include_directories(${GTEST_INCLUDE_DIR})# ${GMOCK_INCLUDE_DIRS})
 
 file(GLOB SOURCE_LIB src/*.cpp)
 file(GLOB ALL_HEADERS *.h)
@@ -51,14 +59,10 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
 
 add_library(${PROJECT_NAME} STATIC ${ALL_HEADERS} ${SOURCE_LIB})
-target_link_libraries(${PROJECT_NAME} Qt4::QtNetwork)
+target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Network)
 
 # install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/etc/config.ini DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/etc)
 
-include_directories(${GTEST_INCLUDE_DIR})
-
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-
 add_executable(crest_test tst/crest_test.cpp src/crest.cpp)
-target_link_libraries(crest_test ${GTEST_BOTH_LIBRARIES} Qt4::QtNetwork)
+target_link_libraries(crest_test ${GTEST_BOTH_LIBRARIES} Qt5::Core Qt5::Network)#${GMOCK_MAIN_LIBRARY} ${GMOCK_LIBRARY})
 add_test(NAME crest_test COMMAND crest_test)
