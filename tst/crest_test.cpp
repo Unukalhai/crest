@@ -10,6 +10,9 @@
 
 #include <gtest/gtest.h>
 
+#include <vector>
+#include <list>
+
 class CrestTest : public ::testing::Test
 {
 public:
@@ -38,16 +41,16 @@ TEST_F(CrestTest, getMarketPrice_4Capital)
 
 TEST_F(CrestTest, getMarketPrice_4SubCapital)
 {
-  ASSERT_EQ(54999898, crest->getMarketPrice(24698, 10000002 , "sell", 60003760));
+  ASSERT_EQ(54999996, crest->getMarketPrice(24698, 10000002 , "sell", 60003760));
 }
 
-/*TEST_F(CrestTest, getInsurance)
+TEST_F(CrestTest, getInsurance)
 {
-  vector<int> insurance_id = {19722, 24698};
+  vector<int> insurance_id = {24698, 19722};
   list<Crest::insurance> insurances = crest->getInsurance(insurance_id.data(), insurance_id.size(), "Platinum");
-  ASSERT_EQ(0, insurances[0].id);
-  ASSERT_EQ(0, insurances[1].id);
-}*/
+  ASSERT_EQ(500710156, insurances.front().cost);
+  ASSERT_EQ(16844560, insurances.back().cost);
+}
 
 int main(int argc, char** argv)
 {

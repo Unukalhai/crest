@@ -41,6 +41,7 @@ private:
 
   boost::scoped_ptr<QNetworkAccessManager> m_namanager;
   QString m_url;
+  QJsonParseError m_err;
 };
 
 #endif //IAPETUS_CREST_H

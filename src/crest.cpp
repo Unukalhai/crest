@@ -13,9 +13,9 @@ string Crest::getName(int id)
 {
   QString param = "inventory/types/" + QString::number(id) + "/";
   QString strReply = getJson(param);
-  QJsonDocument jsonResponse = QJsonDocument::fromJson(strReply.toUtf8());
-  QJsonObject jsonObject = jsonResponse.object();
-  return jsonObject["name"].toString().toStdString();
+  QJsonDocument jsonResponse = QJsonDocument::fromJson(strReply.toUtf8(), &m_err);
+  if(m_err.error != QJsonParseError::NoError) throw std::runtime_error(m_err.errorString().toStdString());
+  return jsonResponse.object()["name"].toString().toStdString();
 }
 
 unsigned int Crest::getMarketPrice(int itemID, int regionID, string orderType, int stationID)
@@ -24,17 +24,13 @@ unsigned int Crest::getMarketPrice(int itemID, int regionID, string orderType, i
                   + "/" + "?type=" + m_url + "inventory/types/" + QString::number(itemID) + "/";
   unsigned int bestPrice = 0;
   QString strReply = getJson(param);
-  QJsonParseError err;
-  QJsonDocument jsonResponse = QJsonDocument::fromJson(strReply.toUtf8(), &err);
-  if(err.error != QJsonParseError::NoError) throw std::runtime_error(err.errorString().toStdString());
-  QJsonObject jsonObject = jsonResponse.object();
-  QJsonArray jsonArray = jsonObject["items"].toArray();
-  for(int i = 0; i < jsonArray.size(); ++i)
+  QJsonDocument jsonResponse = QJsonDocument::fromJson(strReply.toUtf8(), &m_err);
+  if(m_err.error != QJsonParseError::NoError) throw std::runtime_error(m_err.errorString().toStdString());
+  BOOST_FOREACH(QJsonValue json_item, jsonResponse.object()["items"].toArray())
   {
-    QJsonObject json_item = jsonArray[i].toObject();
-    if(stationID == 0 || json_item["location"].toObject()["id"].toInt() == stationID)
+    if(stationID == 0 || json_item.toObject()["location"].toObject()["id"].toInt() == stationID)
     {
-      unsigned int price = json_item["price"].toInt();
+      unsigned int price = json_item.toObject()["price"].toInt();
       if (bestPrice > 0)
       {
         if (orderType == "sell" && price > 0 && price < bestPrice)
@@ -57,7 +53,33 @@ unsigned int Crest::getMarketPrice(int itemID, int regionID, string orderType, i
 
 list<Crest::insurance> Crest::getInsurance(int *ids, int size, string type)
 {
-
+  list<Crest::insurance> insurances;
+  QString param = "insuranceprices/";
+  QString strReply = getJson(param);
+  QJsonDocument jsonResponse = QJsonDocument::fromJson(strReply.toUtf8(), &m_err);
+  if(m_err.error != QJsonParseError::NoError) throw std::runtime_error(m_err.errorString().toStdString());
+  BOOST_FOREACH(QJsonValue json_item, jsonResponse.object()["items"].toArray())
+  {
+    for(int i = 0; i < size; i++)
+    {
+      if(json_item.toObject()["type"].toObject()["id"].toInt() == ids[i])
+      {
+        BOOST_FOREACH(QJsonValue json_insurance, json_item.toObject()["insurance"].toArray())
+        {
+          if(json_insurance.toObject()["level"].toString().toStdString() == type)
+          {
+            Crest::insurance in;
+            in.id = ids[i];
+            in.cost = static_cast<unsigned int>(json_insurance.toObject()["cost"].toDouble());
+            in.payout = static_cast<unsigned int>(json_insurance.toObject()["payout"].toDouble());
+            insurances.push_back(in);
+            break;
+          }
+        }
+      }
+    }
+  }
+  return insurances;
 }
 
 QString Crest::getJson(QString param)
