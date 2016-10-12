@@ -12,9 +12,6 @@
 #include <QJsonObject>
 #include <QEventLoop>
 
-#include <boost/scoped_ptr.hpp>
-#include <boost/foreach.hpp>
-
 #include <list>
 #include <stdexcept>
 
@@ -39,7 +36,7 @@ public:
 private:
   QString getJson(QString param);
 
-  boost::scoped_ptr<QNetworkAccessManager> m_namanager;
+  unique_ptr<QNetworkAccessManager> m_namanager;
   QString m_url;
   QJsonParseError m_err;
 };

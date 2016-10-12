@@ -37,8 +37,7 @@ else()
     endif()
 endif()
 
-find_package(Qt5 COMPONENTS Core Gui Network Widgets Sql Test REQUIRED)
-find_package(Boost REQUIRED)
+find_package(Qt5 COMPONENTS Core Network REQUIRED)
 find_package(GTest REQUIRED)
 find_package(PkgConfig REQUIRED)
 

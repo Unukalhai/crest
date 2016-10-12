@@ -1,13 +1,8 @@
 #include <crest.h>
 
-Crest::Crest(string url)  :
-  m_namanager(new QNetworkAccessManager), m_url(QString::fromStdString(url))
-{
-}
+Crest::Crest(string url) :  m_namanager(new QNetworkAccessManager), m_url(QString::fromStdString(url)) { }
 
-Crest::~Crest()
-{
-}
+Crest::~Crest() { }
 
 string Crest::getName(int id)
 {
@@ -26,7 +21,7 @@ unsigned int Crest::getMarketPrice(int itemID, int regionID, string orderType, i
   QString strReply = getJson(param);
   QJsonDocument jsonResponse = QJsonDocument::fromJson(strReply.toUtf8(), &m_err);
   if(m_err.error != QJsonParseError::NoError) throw std::runtime_error(m_err.errorString().toStdString());
-  BOOST_FOREACH(QJsonValue json_item, jsonResponse.object()["items"].toArray())
+  for(QJsonValue json_item : jsonResponse.object()["items"].toArray())
   {
     if(stationID == 0 || json_item.toObject()["location"].toObject()["id"].toInt() == stationID)
     {
@@ -58,13 +53,13 @@ list<Crest::insurance> Crest::getInsurance(int *ids, int size, string type)
   QString strReply = getJson(param);
   QJsonDocument jsonResponse = QJsonDocument::fromJson(strReply.toUtf8(), &m_err);
   if(m_err.error != QJsonParseError::NoError) throw std::runtime_error(m_err.errorString().toStdString());
-  BOOST_FOREACH(QJsonValue json_item, jsonResponse.object()["items"].toArray())
+  for(QJsonValue json_item : jsonResponse.object()["items"].toArray())
   {
     for(int i = 0; i < size; i++)
     {
       if(json_item.toObject()["type"].toObject()["id"].toInt() == ids[i])
       {
-        BOOST_FOREACH(QJsonValue json_insurance, json_item.toObject()["insurance"].toArray())
+        for(QJsonValue json_insurance : json_item.toObject()["insurance"].toArray())
         {
           if(json_insurance.toObject()["level"].toString().toStdString() == type)
           {
@@ -87,7 +82,7 @@ QString Crest::getJson(QString param)
   QUrl url(m_url + param);
   QNetworkReply *http = m_namanager->get(QNetworkRequest(url));
   QEventLoop eventLoop;
-  BOOST_VERIFY(QObject::connect(http, SIGNAL(finished()), &eventLoop, SLOT(quit())));
+  QObject::connect(http, SIGNAL(finished()), &eventLoop, SLOT(quit()));
   eventLoop.exec();
   if(http->error() > 0)
   {

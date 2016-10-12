@@ -36,20 +36,20 @@ TEST_F(CrestTest, getName)
 
 TEST_F(CrestTest, getMarketPrice_4Capital)
 {
-  ASSERT_EQ(2000000000, crest->getMarketPrice(19722, 10000002 , "sell"));
+  ASSERT_EQ(1850082011, crest->getMarketPrice(19722, 10000002 , "sell"));
 }
 
 TEST_F(CrestTest, getMarketPrice_4SubCapital)
 {
-  ASSERT_EQ(54999996, crest->getMarketPrice(24698, 10000002 , "sell", 60003760));
+  ASSERT_EQ(54499700, crest->getMarketPrice(24698, 10000002 , "sell", 60003760));
 }
 
 TEST_F(CrestTest, getInsurance)
 {
   vector<int> insurance_id = {24698, 19722};
   list<Crest::insurance> insurances = crest->getInsurance(insurance_id.data(), insurance_id.size(), "Platinum");
-  ASSERT_EQ(500710156, insurances.front().cost);
-  ASSERT_EQ(16844560, insurances.back().cost);
+  ASSERT_EQ(497456678, insurances.front().cost);
+  ASSERT_EQ(16450238, insurances.back().cost);
 }
 
 int main(int argc, char** argv)
