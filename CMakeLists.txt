@@ -59,6 +59,6 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
 add_library(${PROJECT_NAME} STATIC ${ALL_HEADERS} ${SOURCE_LIB})
 target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Network)
 
-add_executable(crest_test tst/crest_test.cpp src/crest.cpp)
+add_executable(crest_test tst/crest_test.cpp src/Crest.cpp)
 target_link_libraries(crest_test ${GTEST_BOTH_LIBRARIES} Qt5::Core Qt5::Network)
 add_test(NAME crest_test COMMAND crest_test)

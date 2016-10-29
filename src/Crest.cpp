@@ -1,4 +1,4 @@
-#include <crest.h>
+#include <Crest.h>
 
 Crest::Crest(string url) :  m_namanager(new QNetworkAccessManager), m_url(QString::fromStdString(url)) { }
 
