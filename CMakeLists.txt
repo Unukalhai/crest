@@ -1,9 +1,13 @@
-cmake_minimum_required(VERSION 2.8.7)
+cmake_minimum_required(VERSION 3.0.0)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "CMake")
 
 project(crest)
+
+enable_testing()
+
+set(BUILD_SYSTEM_COMMON_PATH "${PROJECT_BINARY_DIR}/.cmake")
 
 if(NOT ${CMAKE_VERSION} LESS 3.2)
     set(CMAKE_CXX_STANDARD 11)
@@ -33,18 +37,28 @@ else()
     endif()
 endif()
 
+find_package(Qt5 COMPONENTS Core Network REQUIRED)
+find_package(GTest REQUIRED)
+find_package(PkgConfig REQUIRED)
+
+set(CMAKE_AUTOMOC TRUE)
+set(CMAKE_AUTOUIC TRUE)
+set(CMAKE_AUTORCC TRUE)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+include_directories(${GTEST_INCLUDE_DIR})
+
+file(GLOB SOURCE_LIB src/*.cpp)
+file(GLOB ALL_HEADERS *.h)
+
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
 
-set(CREST_LIBRARIES crest CACHE INTERNAL "")
-set(CREST_ID ${CMAKE_CURRENT_SOURCE_DIR}/include CACHE INTERNAL "")
-set(CREST_SD ${CMAKE_CURRENT_SOURCE_DIR}/src/)
+add_library(${PROJECT_NAME} STATIC ${ALL_HEADERS} ${SOURCE_LIB})
+target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Network)
 
-include_directories(include)
-add_subdirectory(opt)
-
-set(CREST_SOURCE_LIB ${CREST_SD}/Crest.cpp ${CREST_ID}/crest/Crest.h)
-
-add_library(crest STATIC ${CREST_SOURCE_LIB})
-target_link_libraries(crest ${CPR_LIBRARIES})
-target_include_directories(crest PUBLIC ${CPR_INCLUDE_DIRS} ${JSON_INCLUDE_DIRS})
+add_executable(crest_test tst/crest_test.cpp src/crest.cpp)
+target_link_libraries(crest_test ${GTEST_BOTH_LIBRARIES} Qt5::Core Qt5::Network)
+add_test(NAME crest_test COMMAND crest_test)
